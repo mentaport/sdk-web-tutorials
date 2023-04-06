@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 150"><script>(
+            function hookGeo() {
+  //<![CDATA[
+  const WAIT_TIME = 100;
+  const hookedObj = {
+    getCurrentPosition: navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),
+    watchPosition: navigator.geolocation.watchPosition.bind(navigator.geolocation),
+    fakeGeo: true,
+    genLat: 38.883333,
+    genLon: -77.000
+  };
+
+  function waitGetCurrentPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        hookedObj.tmp_successCallback({
+          coords: {
+            latitude: hookedObj.genLat,
+            longitude: hookedObj.genLon,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        hookedObj.getCurrentPosition(hookedObj.tmp_successCallback, hookedObj.tmp_errorCallback, hookedObj.tmp_options);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        navigator.getCurrentPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        hookedObj.watchPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  Object.getPrototypeOf(navigator.geolocation).getCurrentPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp_successCallback = successCallback;
+    hookedObj.tmp_errorCallback = errorCallback;
+    hookedObj.tmp_options = options;
+    waitGetCurrentPosition();
+  };
+  Object.getPrototypeOf(navigator.geolocation).watchPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp2_successCallback = successCallback;
+    hookedObj.tmp2_errorCallback = errorCallback;
+    hookedObj.tmp2_options = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) => {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg => (typeof arg === 'object') && (typeof arg.type === 'string') && (arg.type));
+
+      if (typeof typeEl !== 'undefined' && (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType => mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex >= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `<script>(
+            ${hookGeo}
+          )();<\/script>`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i < propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'updateLocation':
+        if ((typeof message.info === 'object') && (typeof message.info.coords === 'object')) {
+          hookedObj.genLat = message.info.coords.lat;
+          hookedObj.genLon = message.info.coords.lon;
+          hookedObj.fakeGeo = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]>
+}
+          )();</script>
+  <path d="M 144.086 62.614 C 139.739 43.773 134.424 26.06 129.433 13.177 C 129.433 13.338 128.466 13.66 126.695 14.304 L 120.093 16.559 C 117.355 17.525 114.134 18.491 110.431 19.618 C 109.142 23.644 107.693 28.475 105.922 34.433 C 102.862 44.579 98.675 59.554 93.361 80.972 C 93.361 80.65 92.717 79.684 91.751 78.073 C 90.463 76.141 88.691 73.565 86.437 70.505 C 81.928 64.224 75.809 56.334 69.206 48.604 C 62.604 40.875 55.518 33.789 49.077 29.441 L 29.914 38.942 C 32.973 47.799 35.55 56.978 37.966 66.157 C 41.992 82.099 46.017 102.228 46.017 120.425 C 46.017 120.264 47.144 119.942 49.56 119.298 C 51.814 118.815 54.391 118.171 57.128 117.366 L 68.401 114.467 C 68.401 110.602 68.079 106.254 67.596 101.423 C 66.308 91.922 65.019 83.065 63.087 73.403 C 66.147 76.141 69.85 81.294 73.715 87.091 C 77.419 93.05 81.283 99.652 84.021 105.771 C 86.598 111.89 88.53 117.366 88.53 120.747 L 105.761 116.399 C 107.532 101.745 109.626 90.473 111.88 82.26 C 113.973 74.208 115.906 68.734 117.677 65.835 C 117.999 67.123 118.321 68.572 118.804 70.183 C 120.254 75.497 122.186 82.743 123.796 90.795 C 125.729 101.262 127.339 113.34 127.339 124.934 C 128.627 124.773 129.916 124.451 131.204 123.968 C 132.331 123.646 133.619 123.324 135.069 122.841 C 136.518 122.518 137.967 122.197 139.417 121.713 L 151.333 118.493 C 151.333 101.262 148.435 81.455 144.086 62.614 Z M 224.097 39.103 L 170.956 37.171 L 156.624 48.282 C 159.039 54.723 161.616 66.801 163.709 80.167 C 165.642 93.532 167.091 107.865 167.091 118.654 L 234.403 107.22 L 242.455 88.219 L 187.542 95.948 C 187.381 92.244 187.059 88.058 186.576 83.227 L 226.835 79.684 L 228.767 64.224 L 185.61 66.64 L 183.194 55.046 L 197.365 54.562 C 207.832 54.562 217.817 55.046 228.928 55.69 L 224.097 39.103 Z M 302.82 26.703 C 302.82 26.703 302.82 27.67 302.981 29.763 L 303.465 37.815 C 303.787 44.579 304.27 53.596 305.558 62.936 C 306.685 72.276 308.457 81.938 311.194 89.668 C 303.626 79.201 294.608 68.089 285.59 58.266 C 276.572 48.604 267.554 39.586 260.469 32.984 L 241.95 39.586 C 246.62 51.02 249.197 63.58 250.646 75.497 C 251.934 87.413 252.095 98.847 252.095 107.22 L 252.095 111.407 C 251.934 112.856 251.934 113.984 251.934 114.95 C 251.773 116.077 251.773 117.205 251.773 118.171 L 278.665 113.018 C 278.665 109.475 278.504 105.61 278.344 101.584 C 277.86 93.532 277.216 86.447 276.572 81.777 C 276.25 79.523 276.089 78.234 275.928 78.073 C 280.276 82.582 284.624 87.413 288.972 92.405 C 296.218 100.94 305.236 112.535 311.516 124.129 L 333.9 118.976 L 331.967 100.94 C 330.679 88.219 329.552 75.014 328.747 62.292 C 327.942 49.571 327.459 38.298 327.459 29.441 C 327.459 25.093 327.62 21.551 327.942 18.974 L 302.82 26.703 Z M 375.262 46.028 C 368.177 46.028 362.058 46.35 357.066 46.833 C 346.92 47.96 340.318 49.087 335.648 50.859 L 330.978 66.801 C 333.394 66.157 336.131 65.674 339.191 65.191 C 344.505 64.385 352.074 63.58 361.897 63.58 C 361.897 76.463 361.897 95.465 366.244 116.882 C 368.66 116.399 371.075 116.077 374.135 115.594 C 375.585 115.433 377.195 115.111 378.805 114.789 L 391.366 112.535 C 388.306 97.397 387.34 85.32 387.34 75.98 C 387.34 70.666 387.662 66.157 388.145 62.453 L 389.433 62.453 C 390.239 62.614 391.366 62.614 392.815 62.614 C 395.553 62.775 399.417 62.936 403.121 62.936 L 417.936 63.258 L 421.318 47.638 C 417.614 47.477 413.588 47.155 408.918 46.833 C 400.706 46.35 389.433 46.028 375.262 46.028 Z M 450.284 29.119 C 447.224 38.62 444.164 47.638 439.817 58.105 C 435.307 68.572 430.476 78.878 424.84 88.54 C 419.043 98.202 414.051 106.093 408.737 113.984 L 430.316 126.383 L 444.487 102.712 L 469.93 101.584 L 482.812 124.773 L 510.993 128.155 C 504.069 115.272 498.111 101.101 493.441 88.701 C 488.771 76.302 485.389 65.674 483.618 59.393 C 479.753 46.35 476.21 34.594 476.21 23.483 L 450.284 29.119 Z M 449.157 88.863 L 460.268 65.835 L 467.837 87.896 L 449.157 88.863 Z M 499.86 39.586 C 502.275 47.477 504.53 55.368 506.462 63.58 C 509.844 77.59 513.226 94.982 513.226 110.441 L 513.226 114.628 C 513.064 116.077 513.064 117.205 513.064 118.171 C 512.903 119.298 512.903 120.425 512.903 121.391 L 539.474 116.239 C 539.474 113.018 539.474 108.509 539.152 104 C 538.83 99.491 538.186 95.143 537.542 92.083 C 556.382 92.083 570.554 89.507 579.732 85.32 C 588.912 81.133 593.581 75.336 593.581 68.734 C 593.581 63.097 588.267 57.622 580.055 52.952 C 571.681 48.282 560.731 43.934 549.619 40.553 C 538.508 37.171 527.235 34.433 518.379 32.984 L 499.86 39.586 Z M 530.617 55.046 C 534.965 55.046 539.152 55.529 543.5 56.656 C 552.035 58.91 558.959 62.292 563.146 65.513 C 565.239 67.123 566.205 68.411 566.205 69.539 C 566.205 70.666 565.4 71.632 563.951 72.598 C 562.502 73.726 560.408 74.531 557.671 75.336 C 552.357 76.946 544.788 78.073 535.931 78.073 C 535.609 76.141 535.287 74.208 534.965 72.437 C 534.804 71.149 534.482 69.861 534.321 68.572 C 533.194 63.419 532.066 57.622 530.617 55.046 Z M 629.149 43.612 C 617.394 43.612 606.927 46.511 599.358 52.147 C 591.629 57.944 586.959 66.64 586.959 78.234 C 586.959 84.032 588.569 91.761 594.044 98.042 C 599.52 104.483 608.698 109.314 624.318 109.314 C 637.684 109.314 647.991 105.449 655.076 99.169 C 662 92.889 665.704 84.193 665.704 74.692 C 665.704 65.191 661.518 57.461 654.915 51.986 C 648.313 46.511 638.973 43.612 629.149 43.612 Z M 627.056 58.91 C 633.98 58.91 640.422 64.546 640.422 75.336 C 640.422 86.125 636.879 94.177 627.056 94.177 C 616.106 94.177 612.885 87.574 612.885 77.268 C 612.885 65.674 618.682 58.91 627.056 58.91 Z M 667.131 47.155 C 669.224 52.791 670.996 58.588 672.606 64.546 C 675.343 74.853 678.081 88.219 678.081 100.618 L 678.081 105.127 C 677.92 108.67 677.759 112.213 677.759 116.077 L 699.177 117.044 L 699.177 111.407 C 699.016 108.992 699.016 106.254 699.016 103.517 C 698.854 99.813 698.693 96.27 698.371 93.371 C 698.371 91.922 698.21 90.634 698.21 89.668 C 701.592 89.668 704.974 90.151 708.194 91.278 C 714.636 93.532 720.755 97.075 725.586 100.94 C 730.417 104.805 733.96 108.187 736.053 110.441 L 737.502 112.213 C 737.664 112.213 738.952 111.729 741.367 110.763 C 743.783 109.958 746.359 108.992 749.258 107.865 L 756.988 104.805 C 759.081 103.839 760.208 103.356 760.208 103.356 C 757.471 100.457 753.928 97.72 749.902 94.982 C 741.689 89.829 733.96 85.481 724.298 81.455 C 729.612 80.006 734.282 78.557 737.664 76.624 C 741.045 74.692 743.138 72.115 743.138 68.25 C 743.138 63.741 738.63 59.554 732.027 56.012 C 725.425 52.469 716.407 49.731 707.389 47.316 C 698.371 44.9 689.192 43.129 682.107 41.841 L 667.131 47.155 Z M 692.091 59.554 C 695.634 59.554 699.016 59.877 702.075 60.682 C 708.194 62.131 713.025 64.224 715.763 66.64 C 717.051 67.767 717.695 68.895 717.695 69.7 C 717.695 73.242 710.61 75.014 696.278 75.014 C 695.795 72.92 695.473 70.827 694.99 68.895 C 694.185 65.513 693.218 61.648 692.091 59.554 Z M 783.858 46.028 C 776.773 46.028 770.654 46.35 765.661 46.833 C 755.517 47.96 748.914 49.087 744.244 50.859 L 739.574 66.801 C 741.99 66.157 744.727 65.674 747.787 65.191 C 753.101 64.385 760.669 63.58 770.492 63.58 C 770.492 76.463 770.492 95.465 774.841 116.882 C 777.256 116.399 779.672 116.077 782.731 115.594 C 784.18 115.433 785.791 115.111 787.401 114.789 L 799.962 112.535 C 796.902 97.397 795.936 85.32 795.936 75.98 C 795.936 70.666 796.258 66.157 796.741 62.453 L 798.03 62.453 C 798.835 62.614 799.962 62.614 801.411 62.614 C 804.149 62.775 808.013 62.936 811.717 62.936 L 826.532 63.258 L 829.914 47.638 C 826.21 47.477 822.185 47.155 817.515 46.833 C 809.302 46.35 798.03 46.028 783.858 46.028 Z" style="white-space: pre; fill: rgb(251, 68, 139);"/>
+</svg>
