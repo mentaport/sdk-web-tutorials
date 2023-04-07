@@ -1,19 +1,28 @@
 import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { useMentaportSDK } from '@lib/mentaport/provider';
 
+import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
+
+import { useMentaportSDK } from '@lib/mentaport/provider';
 import * as MentaportTypes from '@mentaport/core-types';
 
-import {Paper, Stack, TextField, Typography} from '@mui/material';
+import {Paper,Typography, Divider, Box,Grid, Stack} from '@mui/material';
+
+import { 
+  getContractIdTitle,
+  getContractIdDesc1,
+  getOptionalCaption,
+  getTriggerTypeTitle,
+  getTriggerTypeDesc1
+ } from '@components/constants';
+
 
 interface IGetTriggerForm  {
   title:string,
   description:string,
   secondEntry:string,
+  secondEntryDesc?:string,
   triggerTypeSelect:boolean
 }
 export default function GetTriggerForm( props:IGetTriggerForm ) {
@@ -26,8 +35,8 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
     loading:false
   });
   const [infoResult, setInfoResult] = React.useState("");
-  const secondLabel = `${props.secondEntry} (optional)`
-
+  
+  // Handle state changes from input UI
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
@@ -35,6 +44,14 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
     });
   };
 
+  /**
+   * --------------------------------------------------------------
+   * Function that executes Mentaports SDK to get 
+   * the trigger query.
+   * 
+   * - Get all triggers (by contract id + rule id)
+   * - Get closes trigger (by location + radius)
+   */
   async function GetTriggers() {
     setState({
       ...state,
@@ -43,78 +60,83 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
     try {
     
       if(props.title === "Get Triggers") {
-        const result = await mentaportSDK.getTriggers(state.triggerType, state.contractId, state.secondInput)
-        console.log(result)
+        // secondInput in this call is the optional ruleId
+        const ruleId = state.secondInput
+        const result = await mentaportSDK.getTriggers(state.triggerType, state.contractId, ruleId );
+      
         setInfoResult(JSON.stringify(result));
       } else if(props.title === "Closest Triggers") {
+         // secondInput in this call is the radius
         const radius = Number(state.secondInput) || 50;
         const result = await mentaportSDK.getClosestTriggers(state.contractId, radius, state.triggerType);
-        console.log(result)
+       
         setInfoResult(JSON.stringify(result));
       }
     } catch(error){
       console.log(error)
+      setInfoResult(JSON.stringify(error));
     }
     setState({
       ...state,
       "loading": false,
     });
   }
-  const { loading } = state;
 
   return (
-    <Paper elevation={2} sx={{ p:2, display: 'flex', flexDirection: 'column' }}>  
-      <Stack spacing={2}>
-        <Typography variant='h4'> {props.title}</Typography>
-        <Typography  sx={{my:2}}>
+ 
+    <Paper elevation={2} sx={{ p:0,mt:1, display: 'flex', flexDirection: 'column' }}>
+      <Typography variant='h4' sx={{m:2}}> {props.title}</Typography>
+      <Typography  sx={{m:2}}>
           {props.description}
         </Typography>
-        <TextField 
-          id="contractId"
-          label="Contract Id" 
-          variant="outlined"
-          name="contractId"
-          defaultValue={state.contractId}
-          onChange={handleChange}/>
+      <Divider />
+      <Paper elevation={2} sx={{ m:2, display: 'flex', flexDirection: 'column' }}>
+        <Grid container spacing={0} sx={{p:2}}>
+          <Grid item xs={8}>
+            <Stack >
+              <Typography variant="subtitle1">{getTriggerTypeTitle}</Typography> 
+              <Typography variant="body2"> {getTriggerTypeDesc1}</Typography>
+            </Stack>
 
-         <TextField 
-          id="secondInput"
-          label={secondLabel}
-          variant="outlined"
-          name="secondInput"
-          defaultValue={state.secondInput}
-          onChange={handleChange}/>
-
-        { props.triggerTypeSelect ?
-          <FormControl fullWidth>
-            <InputLabel id="triggerType">Trigger Type</InputLabel>
-            <Select
-              labelId="triggerType"
-              name="triggerType"
-              value={state.triggerType}
-              label="triggerType"
-              onChange={handleChange}
-            >
-              <MenuItem value={MentaportTypes.TriggerTypes.Mintlist}>Mintlist</MenuItem>
-              <MenuItem value={MentaportTypes.TriggerTypes.Mint}>Mint</MenuItem>
-              <MenuItem value={MentaportTypes.TriggerTypes.Dynamic}>Dynamic</MenuItem>
-              <MenuItem value={MentaportTypes.TriggerTypes.Discover}>Discover</MenuItem>
-            </Select>
-          </FormControl>
-          : <></>
-        }
-        <LoadingButton
-          size="large"
-          color="secondary"
-          onClick={GetTriggers}
-          loading={loading}
-          // loadingPosition="start"
-          variant="contained"
-        >
-          <span> {props.title}</span>
-        </LoadingButton>
-        <Typography>{infoResult}</Typography>
-      </Stack>
+          </Grid>
+        
+          <Grid item xs={4} align='right'>
+            { props.triggerTypeSelect ?
+              <Select 
+                labelId="triggerType"
+                name="triggerType"
+                value={state.triggerType}
+                onChange={handleChange}
+                sx={{width:'50%'}}
+              >
+                <MenuItem value={MentaportTypes.TriggerTypes.Mintlist}>Mintlist</MenuItem>
+                <MenuItem value={MentaportTypes.TriggerTypes.Mint}>Mint</MenuItem>
+                <MenuItem value={MentaportTypes.TriggerTypes.Dynamic}>Dynamic</MenuItem>
+                <MenuItem value={MentaportTypes.TriggerTypes.Discover}>Discover</MenuItem>
+              </Select>
+            :<></>}
+          </Grid>
+        </Grid>
+        <Divider />
+        <FunctionCodeForm title={getContractIdTitle} 
+          description1={getContractIdDesc1}
+          varType='string' callBack={handleChange} value={state.contractId}/>
+        <Divider />
+        <FunctionCodeForm title={props.secondEntry} 
+          description1={props.secondEntryDesc!}
+          caption={getOptionalCaption}
+          varType='string' callBack={handleChange} value={state.secondInput}/>
+          <Divider /> 
+         
+        <FunctionCodeForm title={''} 
+          description1={''} 
+          varType='button' callBack={GetTriggers} loadingButton={true} loading={state.loading}/>
+        <Box sx={{p:2, bgcolor:'#eeeeee'}} display="grid"  >
+          <Typography variant='subtitle2'>Result</Typography>
+          <Typography variant='caption'>{infoResult}</Typography>
+        </Box>  
+      </Paper>
     </Paper>
+
   );
 }

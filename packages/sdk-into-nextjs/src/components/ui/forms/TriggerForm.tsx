@@ -1,20 +1,34 @@
 import * as React from 'react';
 
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import {Paper, Stack, Checkbox, TextField, Button, Typography} from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import {Paper, Divider, Typography, Box} from '@mui/material';
+import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
 
 import { useMentaportSDK } from '@lib/mentaport/provider';
 
-interface ITriggerForm  {
+import { 
+  getCheckTitle,
+  getCheckDesc1,
+  getCheckDesc2,
+  getContractIdTitle,
+  getContractIdDesc1,
+  getRuleIdTitle,
+  getRuleIdDesc1,
+  getOptionalCaption,
+  getWalletTitle,
+  getWallerDesc1,
+  getNameTitle,
+  getEmailTitle,
+ } from '@components/constants';
+
+ interface ITriggerForm  {
   title:string,
   description:string,
 }
 
 export default function TriggerForm( props:ITriggerForm ) {
   const { mentaportSDK } = useMentaportSDK();
-
+  
+  const [infoResult, setInfoResult] = React.useState("");
   const [state, setState] = React.useState({
     check: true,
     contractId: process.env.NEXT_PUBLIC_MENTAPORT_CONTRACT_ID!,
@@ -24,13 +38,14 @@ export default function TriggerForm( props:ITriggerForm ) {
     email:"",
     wallet:""
   });
-  const [infoResult, setInfoResult] = React.useState("");
-
+ 
+  // Handle state changes from input UI
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target.name === "check") {
+   
+    if(event.target.name === getCheckTitle) {
       setState({
         ...state,
-        [event.target.name]: event.target.checked,
+        check: Boolean(event.target.value),
       });
     }
     else {
@@ -41,42 +56,42 @@ export default function TriggerForm( props:ITriggerForm ) {
     }
   };
 
+  /**
+   * --------------------------------------------------------------
+   * Function that executes Mentaports SDK trigger functions.
+   * 
+   */
   async function TriggerSDK() {
     setState({
       ...state,
       "loading": true,
     });
     try {
-    
+      const userInfo = {
+        wallet:state.wallet,
+        email:state.email,
+        name:state.name,
+      }
       if(props.title === "Mint") {
-        if(check) {
+        if(state.check) {
           const result = await mentaportSDK.checkMintStatus(state.contractId, state.ruleId);
           setInfoResult(JSON.stringify(result));
         } else {
-          const userInfo = {
-            wallet:state.wallet,
-            email:state.email,
-            name:state.name,
-          }
           const result = await mentaportSDK.triggerMint(userInfo,state.contractId, state.ruleId)
           setInfoResult(JSON.stringify(result));
         }
       } else if(props.title === "Mint List") {
-        if(check) {
+        if(state.check) {
           const result = await mentaportSDK.checkMintlistStatus(state.contractId, state.ruleId);
           setInfoResult(JSON.stringify(result));
         } else {
-          const userInfo = {
-            wallet:state.wallet,
-            email:state.email,
-            name:state.name,
-          }
           const result = await mentaportSDK.triggerMintlist(userInfo,state.contractId, state.ruleId)
           setInfoResult(JSON.stringify(result));
         }
       }
     } catch(error){
-      console.log(error)
+     
+      setInfoResult(JSON.stringify(error));
     }
     setState({
       ...state,
@@ -84,80 +99,52 @@ export default function TriggerForm( props:ITriggerForm ) {
     });
   }
 
-  const { check , loading} = state;
-  const checkT = `Check if ${props.title} can trigger`
-
   return (
-    <Paper elevation={2} sx={{ p:2, display: 'flex', flexDirection: 'column', my:1}}>
-      <Typography variant='h4'> {props.title}</Typography>
-      <Typography  sx={{my:2}}>
-        {props.description}
-      </Typography>
-      <FormControl sx={{ mb: 2 }} component="fieldset" variant="standard">
-
-        <Stack spacing={2}>
-          <FormControlLabel
-            control={
-              <Checkbox checked={check} onChange={handleChange} name="check" />
-            }
-            label={checkT}
-          />
-          <TextField 
-            id="contractId"
-            label="Contract Id" 
-            variant="outlined"
-            name="contractId"
-            defaultValue={state.contractId}
-            onChange={handleChange}/>
-
-          <TextField 
-            id="ruleId"
-            label="Rule Id (optional)" 
-            variant="outlined"
-            name="ruleId"
-            defaultValue={state.ruleId}
-            onChange={handleChange}/>
-        
-          {!check ?
+ 
+    <Paper elevation={2} sx={{ p:0,mt:1, display: 'flex', flexDirection: 'column' }}>
+      <Typography variant='h4' sx={{m:2}}> {props.title}</Typography>
+      <Typography  sx={{m:2}}>
+          {props.description}
+        </Typography>
+      <Divider />
+      <Paper elevation={2} sx={{ m:2, display: 'flex', flexDirection: 'column' }}>
+    
+        <FunctionCodeForm title={getContractIdTitle} 
+          description1={getContractIdDesc1}
+          varType='string' callBack={handleChange} value={state.contractId}/>
+        <Divider />
+        <FunctionCodeForm title={getRuleIdTitle} 
+          description1={getRuleIdDesc1}
+          caption={getOptionalCaption}
+          varType='string' callBack={handleChange} value={state.ruleId}/>
+          <Divider /> 
+          <FunctionCodeForm title={getCheckTitle} 
+            description1={getCheckDesc1}  description2={getCheckDesc2}
+            varType='boolean' callBack={handleChange} value={state.check}/>
+          <Divider />
+          {!state.check ?
           <>
-          <Typography variant='h5'> User Info </Typography>
-          <TextField 
-            id="wallet"
-            label="Wallet" 
-            variant="outlined"
-            name="wallet"
-            defaultValue={state.wallet}
-            onChange={handleChange}/>
-
-          <TextField 
-            id="email"
-            label="Email(optional)" 
-            variant="outlined"
-            name="email"
-            defaultValue={state.email}
-            onChange={handleChange}/>
-            <TextField 
-              id="name"
-              label="Name(optional)" 
-              variant="outlined"
-              name="name"
-              defaultValue={state.name}
-              onChange={handleChange}/>
+            <FunctionCodeForm title={getWalletTitle} 
+              description1={getWallerDesc1}
+              varType='address' callBack={handleChange} value={state.wallet}/>
+            
+            <FunctionCodeForm title={getNameTitle} 
+              description1={""} caption={getOptionalCaption}
+              varType='string' callBack={handleChange} value={state.name}/>
+            <FunctionCodeForm title={getEmailTitle} 
+              description1={""} caption={getOptionalCaption}
+              varType='email' callBack={handleChange} value={state.email}/>
           </>
-          : <></>}
-        </Stack>
-      </FormControl>
-      <LoadingButton
-          size="large"
-          color="secondary"
-          onClick={TriggerSDK}
-          loading={loading}
-          // loadingPosition="start"
-          variant="contained"
-        >
-          <span> {props.title}</span>
-      </LoadingButton>
-      <Typography>{infoResult}</Typography>
+          :<></>}
+        <FunctionCodeForm title={''} 
+          description1={''} 
+          varType='button' callBack={TriggerSDK} loadingButton={true} loading={state.loading}/>
+        <Box sx={{p:2, bgcolor:'#eeeeee'}} display="grid" >
+          <Typography variant='subtitle2'>Result</Typography>
+          <Typography variant='caption'>{infoResult}</Typography>
+        </Box>  
+      </Paper>
     </Paper>
+
   );
 }

@@ -10,6 +10,17 @@ const simpleTheme = createTheme({
       main: '#f3fb76',
     },
   },
+  typography: {
+    subtitle1: {
+      lineHeight: 1.6,
+      fontSize: 18,
+    },
+    description1: {
+      lineHeight: 1.6,
+      fontSize: 18,
+      fontWeight: 500,
+    },
+  }
 });
 
 export default simpleTheme;

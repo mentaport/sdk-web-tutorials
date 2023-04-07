@@ -3,16 +3,25 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button, Container, Grid, Paper, Box } from '@mui/material';
+import { Button, Container, Grid, Paper, Box ,Divider} from '@mui/material';
 
 import Header from './header';
 import StartGeoForm from '@components/ui/forms/StartGeoForm';
 import DistanceForm from '@components/ui/forms/DistanceForm';
 import TriggerForm from '@components/ui/forms/TriggerForm';
 import GetTriggerForm from '@components/ui/forms/GetTriggerForm';
-import LoadingButton from '@mui/lab/LoadingButton';
-
+import LocationInfo from '@components/ui/forms/LocationInfo';
+import {
+  mintListDescription,
+  mintDescription,
+  getTriggerDescription,
+  closestTriggerDescription,
+  getRuleIdDesc1,
+  getRadiusIdDesc1,
+  getRuleIdTitle
+} from '@components/constants';
 import { useMentaportSDK } from '@lib/mentaport/provider';
+
 
 interface TabPanel {
   children: React.ReactNode,
@@ -45,45 +54,15 @@ function TabPanel(props: TabPanel) {
 }
 
 
-const mintDescription = "Function to mint an NFT. If the rule engine returns successful, it will produce a unique hash signature to allow the user to mint on the client connecting its wallet. "
-const mintListDescription = "Function to add a user's wallet into a mint list. If the rule engine returns successful, it will have added the user's wallet to the mint list. The mint list can be retied with the supplement SDK or in our admin portal."
-
-const getTriggerDescription = "Function to get all triggers from a contract by trigger type and id. You can also specify a rule id to get those triggers. "
-const closestTriggerDescription = "Function that returns a list of the closest triggers to the user's position in a given radius, contract id, and trigger type."
-
 export default function Main() {
-  const {mentaportSDK} = useMentaportSDK();
 
   const [sdkInit, setSDKInit]     = React.useState(false);
-  const [statusGeo, setStatusGeo] = React.useState("");
-  const [locationInfo, setLocationInfo] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
-
   const [value, setValue]  = React.useState(0);
-  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, newValue:number) => {
     console.log(newValue)
     setValue(newValue);
   };
   
-  function InitSDK() {
-    setSDKInit(true)
-  }
-  function GetStatus() {
-    const result = mentaportSDK.GetStatus();
-    setStatusGeo(JSON.stringify(result))
-  }
-  async function GetLocationInfo() {
-    setLoading(true);
-    try{
-      const result = await mentaportSDK.getLocationInfo();
-      setLocationInfo(JSON.stringify(result))
-    } catch(error){
-      setLocationInfo(JSON.stringify(error))
-    }
-   
-    setLoading(false);
-  }
 
   return (
     <Container maxWidth="lg" sx={{minHeight:'95vh',}}>
@@ -95,7 +74,7 @@ export default function Main() {
           <br />
           {"In this function, you will provide your API key and if you are running in a server-side rendering app."} 
           </Typography>
-          <Button variant="contained" onClick={InitSDK}> Initialize SDK</Button>
+          <Button variant="contained" onClick={()=>setSDKInit(true)}> Initialize SDK</Button>
         </Paper>
       
       : (
@@ -115,64 +94,26 @@ export default function Main() {
                 <StartGeoForm />
               </Grid>
               <Grid item xs={12} >
-                <Paper elevation={2} sx={{ p:2, display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant='h4'>Information</Typography>
-                  <Typography sx={{my:2}}>
-                 {`The status gives you an idea of how our geo-verifier is doing.
-                  It was three main stages: "Non-Initialized, Initializing, Collecting, Success, Failed, and Error."
-                  `}
-                  <br />
-                  <i>{`For a more detailed description, visit the SDK documentation.`} </i>
-                  <br /><br />
-                  {`You can only execute triggers on `}<b>{`"Success"`}</b>
-
-                  </Typography>
-                  <Button variant="contained" onClick={GetStatus}> Get Status</Button>
-                  <Container>
-                    <p>{statusGeo}</p>
-                  </Container>
-                  <Typography>
-                    {`Function to get general location information of user once status is "Success"`}
-                  </Typography>
-                  <LoadingButton
-                    size="large"
-                    color="secondary"
-                    onClick={GetLocationInfo}
-                    loading={loading}
-                    variant="contained"
-                  >
-                    <span> Get Location Info</span>
-                  </LoadingButton>
-                  {/* <Button variant="contained" onClick={GetLocationInfo}> Get Location Info</Button> */}
-                  <p>{locationInfo}</p>
-                </Paper>
+                <LocationInfo />
               </Grid>
             </>
           </TabPanel>
 
          {/* TRIGGER FUNCTIONS TAB PANEL */}
           <TabPanel value={value} index={1}>
-            <Paper elevation={2} sx={{ p:2, display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{my:2}}>
-                {`When it comes to triggers, you can run a "check" before actually trying to trigger. This allows you to have a more responsive UI/UX for your users when designing your application.
-                `}
-                <br /><br />
-                  {`When executing a trigger, you must provide the contract id. You can also specify a rule id for a faster outcome or let the rule engine determine if any rule can be executed successfully.`
-                }
-              </Typography>
-              <TriggerForm title="Mint List" description={mintListDescription} />
-              <TriggerForm title="Mint" description={mintDescription}/>
-            </Paper>
+            <TriggerForm title="Mint" description={mintDescription}/>
+            <TriggerForm title="Mint List" description={mintListDescription} />
+           
           </TabPanel>
           
           {/* HELPER FUNCTIONS TAB PANEL */}
           <TabPanel value={value} index={2}>
             <>
               <Grid item xs={8} sx={{my:2}}>
-                <GetTriggerForm title="Get Triggers" description={getTriggerDescription } secondEntry="Rule Id" triggerTypeSelect={false}/>
+                <GetTriggerForm title="Get Triggers" description={getTriggerDescription } secondEntry={getRuleIdTitle} secondEntryDesc={getRuleIdDesc1} triggerTypeSelect={false}/>
               </Grid>
               <Grid item xs={8} >
-                <GetTriggerForm title="Closest Triggers" description={closestTriggerDescription} secondEntry="Radius" triggerTypeSelect={true}/>
+                <GetTriggerForm title="Closest Triggers" description={closestTriggerDescription} secondEntry="Radius" secondEntryDesc={getRadiusIdDesc1} triggerTypeSelect={true}/>
               </Grid>
               <Grid item xs={8} sx={{my:2}}>
                 <DistanceForm />

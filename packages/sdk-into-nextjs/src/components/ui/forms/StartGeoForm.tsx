@@ -1,88 +1,83 @@
 import * as React from 'react';
 
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import {Paper, Stack, Checkbox, TextField, Button, Typography} from '@mui/material';
+import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
+import {Paper, Divider, Box,Typography} from '@mui/material';
 import { useMentaportSDK } from '@lib/mentaport/provider';
 
+import { 
+  getMobileTitle,
+  getMobileDesc1,
+  getWalkTitle,
+  getWalkDesc1,
+  getWalkCaption
+ } from '@components/constants';
+
 export default function StartGeoForm() {
+  
   const {mentaportSDK } = useMentaportSDK();
   const [state, setState] = React.useState({
     mobile: true,
     walkTime: 45,
-    startGeo:false
+    startGeo:false,
+    result: "Started geo-location: false"
   });
-
+  // Handle state changes from input UI
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target.name === "mobile") {
+    console.log(event.target.value, event.target.name)
+    if(event.target.name === getMobileTitle) {
       setState({
         ...state,
-        [event.target.name]: event.target.checked,
+        mobile: Boolean(event.target.value),
       });
     }
     else {
       setState({
         ...state,
-        [event.target.name]: event.target.value,
+        walkTime: Number(event.target.value),
       });
     }
   };
 
+  /**
+   * --------------------------------------------------------------
+   * Function that executes Mentaports SDK to start 
+   * geo-vefier with set parameters.
+   * 
+   */
   function StartGeoLocationSDK() {
-    mentaportSDK.SetClientSide();
-
-    mentaportSDK.StartGeoLocation(mobile, state.walkTime);
-   console.log(mentaportSDK)
-   setState({
-    ...state,
-    "startGeo":true
-   })
+    mentaportSDK.StartGeoLocation(state.mobile, state.walkTime);
+    
+    setState({
+      ...state,
+      "startGeo":true,
+      "result":"Started geo-location: true"
+    })
   }
 
-  const { mobile } = state;
-
   return (
-    <Paper elevation={2} sx={{ p:2, display: 'flex', flexDirection: 'column' }}>
-      <Typography variant='h4'>StartGeoLocation</Typography>
-      <Typography  sx={{my:2}}>
-      This function starts our geo-verifier. 
-      You can select mobile requirements and how long to track the user walking before allowing any trigger to execute. The longer the time, the more precise our location verification algorithm is.  
-      (Walking info is only allowed on mobile)
-      </Typography>
-      <FormControl sx={{ mb: 2 }} component="fieldset" variant="standard">
-        <Stack spacing={2}>
-        
-            <FormControlLabel
-              control={
-                <Checkbox checked={mobile} onChange={handleChange} name="mobile" />
-              }
-              label="Mobile Required"
-            />
-            {mobile ? 
-              <TextField 
-                id="wtime"
-                label="Min Walk Time" 
-                variant="outlined"
-                name="wtime"
-                defaultValue={state.walkTime}
-                onChange={handleChange}/>
-              :<></>
-            }
-        </Stack>
-      
-      </FormControl>
-      <Button 
-         size="large"
-         type="submit"
-         variant="contained"
-         color="primary"
-         onClick={StartGeoLocationSDK}>
-          Submit
-       </Button>
-        { state.startGeo?  
-          <Typography>Geo verification started</Typography> 
-          :(<></>)
-        }
+   
+  <Paper elevation={2} sx={{ p:0, display: 'flex', flexDirection: 'column' }}>
+    <Typography variant='h4' sx={{m:2}}>StartGeoLocation</Typography>
+    <Divider />
+    <Paper elevation={2} sx={{ m:2, display: 'flex', flexDirection: 'column' }}>
+      <FunctionCodeForm title={getMobileTitle} 
+        description1={getMobileDesc1} 
+        varType='boolean' callBack={handleChange} value={state.mobile}/>
+        <Divider />
+        {state.mobile ?
+          <FunctionCodeForm title={getWalkTitle} 
+            description1={getWalkDesc1} caption={getWalkCaption}
+            varType='number' callBack={handleChange} value={state.walkTime}/>
+         :<></>}
+      <FunctionCodeForm title={''} 
+        description1={''} 
+        varType='button' callBack={StartGeoLocationSDK} />
+      <Box sx={{p:2, bgcolor:'#eeeeee'}} display="grid"  >
+        <Typography variant='subtitle2'>Result</Typography>
+        <Typography variant='caption'>{state.result}</Typography>
+      </Box>  
     </Paper>
+
+  </Paper>
   );
 }
