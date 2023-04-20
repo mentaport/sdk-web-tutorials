@@ -2,7 +2,8 @@
 import React, {useEffect, useState, useContext} from "react";
 
 import { createContext } from 'react';
-import MentaportCoreSDK  from '@mentaport/core'
+import {MentaportCoreSDK}  from '@mentaport/core';
+import { Environment } from '@mentaport/core-types';
 
 interface IMentaportContext {
   mentaportSDK: MentaportCoreSDK;
@@ -20,9 +21,9 @@ const MentaportProvider:React.FC<Props> = ({children}) =>{
   const [mentaportSDK, setMentaportSDK] = useState(defaultState.mentaportSDK);
   
   useEffect(() => {
-  // console.log("MentaportProvider: ", mentaportSDK);
-   mentaportSDK.SetClientSide(process.env.NEXT_PUBLIC_API_URL);
-   
+  // For this tutorial we are going to be in staging to coomunicate with our test contract in testnet
+   mentaportSDK.SetClientSide(Environment.DEVELOPMENT, process.env.NEXT_PUBLIC_API_URL);
+    // Uncomment ONLY: if application doesnt need location. Read more in the documentation
    //mentaportSDK.SetNoLocationRequired();
   }, [])
   return (

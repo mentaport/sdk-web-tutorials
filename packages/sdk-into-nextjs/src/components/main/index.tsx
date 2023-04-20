@@ -10,6 +10,8 @@ import StartGeoForm from '@components/ui/forms/StartGeoForm';
 import DistanceForm from '@components/ui/forms/DistanceForm';
 import TriggerForm from '@components/ui/forms/TriggerForm';
 import GetTriggerForm from '@components/ui/forms/GetTriggerForm';
+import GetTriggerDistanceForm from '@components/ui/forms/GetTriggerDistanceForm';
+
 import LocationInfo from '@components/ui/forms/LocationInfo';
 import {
   mintListDescription,
@@ -20,7 +22,6 @@ import {
   getRadiusIdDesc1,
   getRuleIdTitle
 } from '@components/constants';
-import { useMentaportSDK } from '@lib/mentaport/provider';
 
 
 interface TabPanel {
@@ -53,17 +54,14 @@ function TabPanel(props: TabPanel) {
   );
 }
 
-
 export default function Main() {
 
   const [sdkInit, setSDKInit]     = React.useState(false);
   const [value, setValue]  = React.useState(0);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, newValue:number) => {
-    console.log(newValue)
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   
-
   return (
     <Container maxWidth="lg" sx={{minHeight:'95vh',}}>
     <Header />
@@ -110,10 +108,20 @@ export default function Main() {
           <TabPanel value={value} index={2}>
             <>
               <Grid item xs={8} sx={{my:2}}>
-                <GetTriggerForm title="Get Triggers" description={getTriggerDescription } secondEntry={getRuleIdTitle} secondEntryDesc={getRuleIdDesc1} triggerTypeSelect={false}/>
+                <GetTriggerForm 
+                  title="Get Triggers"
+                  description={getTriggerDescription } 
+                  secondEntry={getRuleIdTitle} 
+                  secondEntryDesc={getRuleIdDesc1}
+                 />
               </Grid>
               <Grid item xs={8} >
-                <GetTriggerForm title="Closest Triggers" description={closestTriggerDescription} secondEntry="Radius" secondEntryDesc={getRadiusIdDesc1} triggerTypeSelect={true}/>
+                <GetTriggerDistanceForm 
+                  title="Closest Triggers" 
+                  description={closestTriggerDescription} 
+                  secondEntry="Radius" 
+                  secondEntryDesc={getRadiusIdDesc1}
+                />
               </Grid>
               <Grid item xs={8} sx={{my:2}}>
                 <DistanceForm />

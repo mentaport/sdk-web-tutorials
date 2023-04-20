@@ -3,7 +3,6 @@ import * as React from 'react';
 import {Typography, 
   Grid,
   Stack,
-  Box, 
   TextField,
   MenuItem,
   Button} from '@mui/material';
@@ -28,13 +27,11 @@ export default function FunctionCodeForm(props:IFromCode) {
   const menuItems = [{id:"0", label: "true", value: true},{id:"1", label: "false", value: false}]
   const [checkmark, setBoolean] = React.useState(true);
   
-
-
   function Title() {
     if(props.varType ==='button') {
       return(
         <Typography variant="subtitle1">
-          {props.title}
+          {props.title.toUpperCase()}
         </Typography> 
       );
     } 

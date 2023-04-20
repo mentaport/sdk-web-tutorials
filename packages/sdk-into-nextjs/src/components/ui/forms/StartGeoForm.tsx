@@ -1,7 +1,12 @@
 import * as React from 'react';
 
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+
 import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
-import {Paper, Divider, Box,Typography} from '@mui/material';
+import Results from '@components/ui/forms/common/Results';
+
 import { useMentaportSDK } from '@lib/mentaport/provider';
 
 import { 
@@ -23,7 +28,7 @@ export default function StartGeoForm() {
   });
   // Handle state changes from input UI
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value, event.target.name)
+   //console.log(event.target.value, event.target.name)
     if(event.target.name === getMobileTitle) {
       setState({
         ...state,
@@ -72,10 +77,8 @@ export default function StartGeoForm() {
       <FunctionCodeForm title={''} 
         description1={''} 
         varType='button' callBack={StartGeoLocationSDK} />
-      <Box sx={{p:2, bgcolor:'#eeeeee'}} display="grid"  >
-        <Typography variant='subtitle2'>Result</Typography>
-        <Typography variant='caption'>{state.result}</Typography>
-      </Box>  
+      <Results result={state.result} />
+      
     </Paper>
 
   </Paper>

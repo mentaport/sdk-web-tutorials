@@ -1,0 +1,17 @@
+{
+  "name": "@mentaport/sdk-supplement-intro-cmd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "sdklink": "npm link ../../../../../sdk/sdk-ts/sdk-web/packages/*"
+  },
+  "keywords": [],
+  "author": "Mentaport",
+  "license": "Mentaport",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  }
+}

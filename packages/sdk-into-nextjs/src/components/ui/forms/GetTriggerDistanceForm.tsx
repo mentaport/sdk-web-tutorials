@@ -17,10 +17,12 @@ import * as MentaportTypes from '@mentaport/core-types';
 import { 
   getContractIdTitle,
   getContractIdDesc1,
-  getOptionalCaption,
   getTriggerTypeTitle,
-  getTriggerTypeDesc1
- } from '@components/constants';
+  getTriggerTypeDesc1,
+  getDisUnitTitle,
+  getDisUnitDes1
+} from '@components/constants';
+
 
 interface IGetTriggerForm  {
   title:string,
@@ -28,13 +30,14 @@ interface IGetTriggerForm  {
   secondEntry:string,
   secondEntryDesc?:string,
 }
-export default function GetTriggerForm( props:IGetTriggerForm ) {
+export default function GetTriggerDistanceForm( props:IGetTriggerForm ) {
   const { mentaportSDK } = useMentaportSDK();
 
   const [state, setState] = React.useState({
     contractId: process.env.NEXT_PUBLIC_MENTAPORT_CONTRACT_ID!,
     triggerType: MentaportTypes.TriggerTypes.Mintlist,
-    ruleId:"",
+    radius:50,
+    unitType: MentaportTypes.DistanceUnits.meter,
     loading:false
   });
 
@@ -65,14 +68,9 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
   async function GetTriggers() {
     setState({ ...state, "loading": true });
     try {
-      if(props.title === "Get Triggers") {
-        const result = await mentaportSDK.getTriggers(state.triggerType, state.contractId, state.ruleId );
-        let res = ""
-        for(var x in result.data) {
-          res += JSON.stringify(result.data[x]);
-          res +=  `\n`
-        }
-        setInfoResult(res);
+     if(props.title === "Closest Triggers") {
+        const result = await mentaportSDK.getClosestTriggers(state.contractId, state.radius, state.unitType, state.triggerType);
+        setInfoResult(JSON.stringify(result));
       }
     } catch(error){
       console.log(error)
@@ -100,6 +98,7 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
           </Grid>
         
           <Grid item xs={4} container direction="column" alignItems="flex-end">
+         
             <Select 
               labelId="triggerType"
               name="triggerType"
@@ -112,6 +111,7 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
               <MenuItem value={MentaportTypes.TriggerTypes.Dynamic}>Dynamic</MenuItem>
               <MenuItem value={MentaportTypes.TriggerTypes.Discover}>Discover</MenuItem>
             </Select>
+          
           </Grid>
         </Grid>
         <Divider />
@@ -122,11 +122,37 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
         <Divider />
         <FunctionCodeForm title={props.secondEntry} 
           description1={props.secondEntryDesc!}
-          caption={getOptionalCaption}
-          varType='string' callBack={handleChange} value={state.ruleId}
+          varType='number' callBack={handleChange} value={state.radius}
         />
-          <Divider /> 
-         
+        <Divider /> 
+        <Grid container spacing={0} sx={{p:2, display: "flex"}}>
+          <Grid item xs={8}>
+            <Stack >
+              <Typography variant="subtitle1">{getDisUnitTitle}</Typography> 
+              <Typography variant="body2"> {getDisUnitDes1}</Typography>
+            </Stack>
+
+          </Grid>
+        
+          <Grid item xs={4} container direction="column" alignItems="flex-end">
+           
+            <Select 
+              labelId="unitType"
+              name="unitType"
+              value={state.unitType}
+              onChange={handleSelectChange}
+              sx={{width:'50%', justifyContent:'end'}}
+            >
+              <MenuItem value={MentaportTypes.DistanceUnits.ft}>Feet</MenuItem>
+              <MenuItem value={MentaportTypes.DistanceUnits.meter}>Meter</MenuItem>
+              <MenuItem value={MentaportTypes.DistanceUnits.miles}>Miles</MenuItem>
+              <MenuItem value={MentaportTypes.DistanceUnits.kilometers}>Kilometers</MenuItem>
+              
+            </Select>
+      
+          </Grid> 
+        </Grid>
+
         <FunctionCodeForm title={''} 
           description1={''} 
           varType='button' callBack={GetTriggers} loadingButton={true} loading={state.loading}

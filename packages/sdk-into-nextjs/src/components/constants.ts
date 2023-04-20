@@ -28,22 +28,24 @@ export const getCheckDesc1 = "It will check if this contract can run this type o
 export const getCheckDesc2 = "This allows you to have a more responsive UI/UX for your users when designing your application."
 export const getOptionalCaption= "Optional"
 
-export const getContractIdTitle ="ContractId"
+export const getContractIdTitle ="contractId"
 export const getContractIdDesc1 = "Contract id of trigger trying to run"
 
-export const getRuleIdTitle ="RuleId"
+export const getRuleIdTitle ="ruleId"
 export const getRuleIdDesc1 = "Rule id of trigger trying to run"
 
-export const getWalletTitle ="Wallet"
+export const getWalletTitle ="wallet"
 export const getWallerDesc1 = "Wallet address of user"
 
-export const getNameTitle ="Name"
-export const getEmailTitle ="Email"
+export const getNameTitle ="name"
+export const getEmailTitle ="email"
 
 export const getTriggerTypeTitle ="Trigger Type"
 export const getTriggerTypeDesc1 ="Pick a type of trigger to query"
 
-export const getRadiusIdDesc1 = "Radius of query in meters"
+export const getRadiusIdDesc1 = "Radius of query. Default in meters"
+export const getDisUnitTitle = "Measurment Unit"
+export const getDisUnitDes1 = "Select unit type for distance query"
 //---
 export const getTriggersTitle="Get Trigers"
 export const getTriggersDesc1 = "Function to get all triggers from a contract by trigger type and id."

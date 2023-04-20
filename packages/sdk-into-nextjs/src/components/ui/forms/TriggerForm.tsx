@@ -1,7 +1,11 @@
 import * as React from 'react';
 
-import {Paper, Divider, Typography, Box} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+
 import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
+import Results from '@components/ui/forms/common/Results';
 
 import { useMentaportSDK } from '@lib/mentaport/provider';
 
@@ -41,7 +45,7 @@ export default function TriggerForm( props:ITriggerForm ) {
  
   // Handle state changes from input UI
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-   
+
     if(event.target.name === getCheckTitle) {
       setState({
         ...state,
@@ -62,10 +66,7 @@ export default function TriggerForm( props:ITriggerForm ) {
    * 
    */
   async function TriggerSDK() {
-    setState({
-      ...state,
-      "loading": true,
-    });
+    setState({ ...state, "loading": true });
     try {
       const userInfo = {
         wallet:state.wallet,
@@ -85,18 +86,14 @@ export default function TriggerForm( props:ITriggerForm ) {
           const result = await mentaportSDK.checkMintlistStatus(state.contractId, state.ruleId);
           setInfoResult(JSON.stringify(result));
         } else {
-          const result = await mentaportSDK.triggerMintlist(userInfo,state.contractId, state.ruleId)
+          const result = await mentaportSDK.triggerMintlist(userInfo, state.contractId, state.ruleId)
           setInfoResult(JSON.stringify(result));
         }
       }
-    } catch(error){
-     
+    } catch(error) {
       setInfoResult(JSON.stringify(error));
     }
-    setState({
-      ...state,
-      "loading": false,
-    });
+    setState({ ...state, "loading": false });
   }
 
   return (
@@ -139,10 +136,8 @@ export default function TriggerForm( props:ITriggerForm ) {
         <FunctionCodeForm title={''} 
           description1={''} 
           varType='button' callBack={TriggerSDK} loadingButton={true} loading={state.loading}/>
-        <Box sx={{p:2, bgcolor:'#eeeeee'}} display="grid" >
-          <Typography variant='subtitle2'>Result</Typography>
-          <Typography variant='caption'>{infoResult}</Typography>
-        </Box>  
+        <Results result={infoResult} />
+        
       </Paper>
     </Paper>
 
