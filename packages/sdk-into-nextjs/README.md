@@ -27,10 +27,8 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-![Demo](https://docs.mentaport.xyz/assets/images/tutorial_init-e72b74e27e7db74fbfb0a7c1615fe63c.png)
 
-
-[![Watch the video](https://img.youtube.com/vi/FVXU2VUwo6s/maxresdefault.jpg)](https://youtu.be/FVXU2VUwo6s)
+[![Watch the video](https://docs.mentaport.xyz/assets/images/tutorial_init-e72b74e27e7db74fbfb0a7c1615fe63c.png)](https://youtu.be/FVXU2VUwo6s)
 
 
 *This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).*
