@@ -15,7 +15,7 @@ This code is here to help you get started in creating location-aware projects.
 
 
 ## API Key
-Send us an email to developer@mentaport.com to get your FREE API key to run the tutorial.
+Send us an email to developer@mentaport.com to get your FREE API key to run the tutorial and the SDK Package.
 
 ## Asks:
 - ask as many questions as you might have

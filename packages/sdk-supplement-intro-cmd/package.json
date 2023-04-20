@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "sdklink": "npm link ../../../../../sdk/sdk-ts/sdk-web/packages/*"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Mentaport",
