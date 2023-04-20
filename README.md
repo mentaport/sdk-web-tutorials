@@ -14,6 +14,9 @@ This code is here to help you get started in creating location-aware projects.
    - How to use the supplement SDK to create your contracts and rules.
 
 
+## API Key
+Send us an email to developer@mentaport.com to get your FREE API key to run the tutorial.
+
 ## Asks:
 - ask as many questions as you might have
 - suggest new ways to improve the tutorials
