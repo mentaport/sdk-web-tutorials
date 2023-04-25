@@ -3,6 +3,7 @@ const { MentaportSupplementSDK, MentaportUtils } = pkg;
 
 import {
   ContractType, 
+  ContractStatus,
   BlockchainTypes,
   RuleSchemas,
   RuleTypes,
@@ -113,7 +114,7 @@ async function TutorialInit() {
     //await getRules(contractId)
 
     // 3. ACTIVATE CONTRACT
-    //await activate(contractId)
+    await activate(contractId)
   } catch(error) {
     console.log(error)
   }
@@ -123,17 +124,27 @@ async function TutorialUpdate(contractId) {
   try {
    
     // 1. Get rules
-   // await getRules(contractId)
-   // 2. ADD RULES TO CONTRACT
-    await setRules(contractId);
+    // await getRules(contractId)
+    // 2. ADD RULES TO CONTRACT
+    //await setRules(contractId);
     
     // 3. ACTIVATE CONTRACT
-  // await activate(contractId)
+    // await activate(contractId)
+    // 4. PAUSE AN ACTIVE CONTRACT
+    //const result = await supClient.contractSDK.updateContractStatusById(contractId, ContractStatus.Pending);
+    //console.log(result);
   } catch(error) {
     console.log(error)
   }
 }
 
+async function TutorialGetMintlist(contractId){
+  const list = await supClient.contractSDK.getMintlistById(contractId);
+  console.log(list)
+}
+
 //TutorialInit()
 
-TutorialUpdate('1b75970e-dd37-4def-a6b6-7810199dcb75')
+//TutorialUpdate('contract-id')
+
+//TutorialGetMintlist('contract-id')
