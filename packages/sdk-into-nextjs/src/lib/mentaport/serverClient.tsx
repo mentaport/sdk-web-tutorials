@@ -1,6 +1,6 @@
 
 import {MentaportCoreSDK} from '@mentaport/core';
-import { Environment } from '@mentaport/core-types';
+import { Environment } from '@mentaport/types-core';
 
 let mentaportClient:MentaportCoreSDK = null;
 export async function MentaportServerSDK(reqUrl:string, method:string, body:string ) {

@@ -12,7 +12,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
 import Results from '@components/ui/forms/common/Results';
 import { useMentaportSDK } from '@lib/mentaport/provider';
-import * as MentaportTypes from '@mentaport/core-types';
+import * as MentaportTypes from '@mentaport/types-core';
 
 import { 
   getDistanceTitle,

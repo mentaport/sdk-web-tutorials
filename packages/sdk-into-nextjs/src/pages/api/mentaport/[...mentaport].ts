@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {MentaportServerSDK} from '@lib/mentaport/serverClient';
-
+import {IResults} from '@mentaport/types-common'
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -10,10 +10,10 @@ export default async function handler(
    return res.status(200).send(response);
   
   } catch (error) {
-    console.log("mentaport error")
-    if(error.response) {
-      console.log(error.response.data)
-      return  res.status(error.response.status).send(error.response.data)
+    console.log("mentaport error", error)
+    const err = error as IResults<string>;
+    if(err && err.status) {
+      return res.status(err.status).send(err.data)
     }
     return res.status(500).end();
   }

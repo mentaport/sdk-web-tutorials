@@ -11,7 +11,7 @@ import {
   TimeTypes,
   LocationTypes,
   Environment
-} from "@mentaport/supplement-types";
+} from "@mentaport/types-supplement";
 
 import * as dotenv from 'dotenv'
 dotenv.config()
@@ -131,7 +131,7 @@ async function TutorialUpdate(contractId) {
     // 3. ACTIVATE CONTRACT
     // await activate(contractId)
     // 4. PAUSE AN ACTIVE CONTRACT
-    //const result = await supClient.contractSDK.updateContractStatusById(contractId, ContractStatus.Pending);
+    //const result = await supClient.contractSDK.updateContractStatusById(contractId, ContractStatus.Paused);
     //console.log(result);
   } catch(error) {
     console.log(error)

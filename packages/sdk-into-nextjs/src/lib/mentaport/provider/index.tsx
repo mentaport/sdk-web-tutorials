@@ -3,7 +3,7 @@ import React, {useEffect, useState, useContext} from "react";
 
 import { createContext } from 'react';
 import {MentaportCoreSDK}  from '@mentaport/core';
-import { Environment } from '@mentaport/core-types';
+import { Environment } from '@mentaport/types-core';
 
 interface IMentaportContext {
   mentaportSDK: MentaportCoreSDK;
