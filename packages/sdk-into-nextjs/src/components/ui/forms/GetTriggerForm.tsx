@@ -67,10 +67,13 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
     try {
       if(props.title === "Get Triggers") {
         const result = await mentaportSDK.getTriggers(state.triggerType, state.contractId, state.ruleId );
-        let res = ""
-        for(var x in result.data) {
-          res += JSON.stringify(result.data[x]);
-          res +=  `\n`
+        let res = result.message + " ";
+        if(result.data) {
+         res += result.data.length + `\n`
+          for(var x in result.data) {
+            res += JSON.stringify(result.data[x]);
+            res +=  `\n`
+          }
         }
         setInfoResult(res);
       }

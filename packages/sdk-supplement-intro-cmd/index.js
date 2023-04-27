@@ -25,7 +25,7 @@ dotenv.config()
  */
 
 const supClient = new MentaportSupplementSDK(process.env.MENTAPORT_API_KEY);
-supClient.SetClientSide(Environment.DEVELOPMENT);
+supClient.SetClientSide(Environment.STABLE);
 
 /**
  * --------------------------------------------------------------
@@ -84,12 +84,12 @@ function createRules(contractId, name, description, latitude, longitude, radius,
 async function setRules(contractId) {
   // name, description, latitude, longitude, radius (m), amount
   const miles = MentaportUtils.convertMilesToMeters(7);
-  //const rule1 = createRules(contractId,"Rule San Francisco","My rule in all San Francisco, CA", 37.7749, -122.4194 , miles, 100);
- // const rule2 = createRules(contractId,"Rule Venice","My rule in Venice beach CA", 33.9850, -118.4695, 80, 100);
-  const rule3 = createRules(contractId,"Rule Santa Monica","My rule in Santa Monica CA",34.0195, -118.4912, miles, 100);
+  const rule1 = createRules(contractId,"Rule San Francisco","My rule in all San Francisco, CA", 37.7749, -122.4194 , miles, 100);
+  const rule2 = createRules(contractId,"Rule Venice","My rule in Venice beach CA", 33.9850, -118.4695, 80, 100);
+ // const rule3 = createRules(contractId,"Rule Santa Monica","My rule in Santa Monica CA",34.0195, -118.4912, miles, 100);
 
-  //const result = await supClient.rulesSDK.createNewRules([rule1, rule2])
-   const result = await supClient.rulesSDK.createNewRules([rule3])
+  const result = await supClient.rulesSDK.createNewRules([rule1, rule2])
+  // const result = await supClient.rulesSDK.createNewRules([rule3])
   console.log(result)
 }
 
@@ -124,7 +124,7 @@ async function TutorialUpdate(contractId) {
   try {
    
     // 1. Get rules
-    // await getRules(contractId)
+     await getRules(contractId)
     // 2. ADD RULES TO CONTRACT
     //await setRules(contractId);
     

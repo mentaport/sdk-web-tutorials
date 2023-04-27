@@ -5,8 +5,8 @@ import { Environment } from '@mentaport/types-core';
 let mentaportClient:MentaportCoreSDK = null;
 export async function MentaportServerSDK(reqUrl:string, method:string, body:string ) {
   if(mentaportClient === null) {
-    mentaportClient = new MentaportCoreSDK(process.env.MENTAPORT_API_KEY!, Boolean(process.env.NEXT_PUBLIC_SERVER_APP!));
-    mentaportClient.SetServerSide(Environment.DEVELOPMENT)
+    mentaportClient = new MentaportCoreSDK(process.env.MENTAPORT_API_KEY!, true);
+    mentaportClient.SetServerSide(Environment.STABLE)
   } else {
     console.log("Already InitMentaportSDKSever")
   }

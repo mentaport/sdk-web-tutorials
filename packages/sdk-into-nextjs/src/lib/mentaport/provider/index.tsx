@@ -9,7 +9,7 @@ interface IMentaportContext {
   mentaportSDK: MentaportCoreSDK;
 }
 const defaultState = {
-  mentaportSDK:new MentaportCoreSDK(process.env.MENTAPORT_API_KEY!, Boolean(process.env.NEXT_PUBLIC_SERVER_APP!)),
+  mentaportSDK:new MentaportCoreSDK(process.env.MENTAPORT_API_KEY!, true),
 };
 
 export const MentaportContext = createContext<IMentaportContext>(defaultState);
@@ -22,7 +22,7 @@ const MentaportProvider:React.FC<Props> = ({children}) =>{
   
   useEffect(() => {
     // For this tutorial we are going to be in staging to coomunicate with our test contract in testnet
-    mentaportSDK.SetClientSide(Environment.DEVELOPMENT, process.env.NEXT_PUBLIC_API_URL);
+    mentaportSDK.SetClientSide(Environment.STABLE, process.env.NEXT_PUBLIC_API_URL);
     // Uncomment ONLY: if application doesnt need location. Read more in the documentation
     //mentaportSDK.SetNoLocationRequired();
   }, [])

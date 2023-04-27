@@ -119,7 +119,7 @@ export default function Main() {
                 <GetTriggerDistanceForm 
                   title="Closest Triggers" 
                   description={closestTriggerDescription} 
-                  secondEntry="Radius" 
+                  secondEntry="radius" 
                   secondEntryDesc={getRadiusIdDesc1}
                 />
               </Grid>
