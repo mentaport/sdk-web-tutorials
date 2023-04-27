@@ -25,7 +25,16 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Add .env File
+```
+# MENTAPORT_SDK
+# make sure to change it to production URL when deploy (www.my-app.xyz) 
+NEXT_PUBLIC_API_URL=http://localhost:3005
+NEXT_PUBLIC_MENTAPORT_CONTRACT_ID=your-contract-id
+
+MENTAPORT_API_KEY=your-api-key
+```
+Open [http://localhost:3005](http://localhost:3000) with your browser to see the result.
 
 
 [![Watch the video](https://docs.mentaport.xyz/assets/images/tutorial_init-e72b74e27e7db74fbfb0a7c1615fe63c.png)](https://youtu.be/FVXU2VUwo6s)
