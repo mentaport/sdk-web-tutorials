@@ -6,6 +6,7 @@ This code is here to help you get started in creating location-aware projects.
 
 
 ## Tutorials:
+Inside the package folder you will find all the tutorials.
 - Core SDK Quick Intro: *[sdk-into-nextjs]*
    - How to get started with Mentaport's Core SDK in a Nextjs application
    - This tutorial goes through all the functions currently in Beta and how to use them (triggers!!).
