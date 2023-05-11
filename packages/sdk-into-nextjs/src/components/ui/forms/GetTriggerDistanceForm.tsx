@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 import FunctionCodeForm from '@components/ui/forms/common/FunctionCodeForm';
 import Results from '@components/ui/forms/common/Results';
@@ -157,6 +158,11 @@ export default function GetTriggerDistanceForm( props:IGetTriggerForm ) {
           description1={''} 
           varType='button' callBack={GetTriggers} loadingButton={true} loading={state.loading}
         />
+
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+          <code>{"const result = await mentaportSDK.getClosestTriggers(contractId, radius, unitType, triggerType);"}</code>
+        </Box>
+
         <Results result={infoResult} />
         
       </Paper>

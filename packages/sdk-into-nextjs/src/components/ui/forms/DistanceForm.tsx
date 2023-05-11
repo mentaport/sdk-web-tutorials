@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -107,6 +108,10 @@ export default function StartGeoForm() {
         <FunctionCodeForm title={''} 
           description1={""} 
           varType='button' callBack={CalculateDis}  />
+
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+          <code>{"const distance = mentaportSDK.GetDistanceToPoint(latitude, longitude, unitType);"}</code>
+        </Box>
         <Results result={state.infoResult} />
        
       </Paper>

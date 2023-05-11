@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -74,6 +75,11 @@ export default function StartGeoForm() {
             description1={getWalkDesc1} caption={getWalkCaption}
             varType='number' callBack={handleChange} value={state.walkTime}/>
          :<></>}
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5}}>
+        <code>{"mentaportSDK.StartGeoLocation(isMobile, walkTime);"}</code>
+        </Box>
+     
+
       <FunctionCodeForm title={''} 
         description1={''} 
         varType='button' callBack={StartGeoLocationSDK} />

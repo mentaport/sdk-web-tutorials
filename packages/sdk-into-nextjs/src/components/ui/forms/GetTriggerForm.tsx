@@ -2,6 +2,8 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
@@ -134,6 +136,11 @@ export default function GetTriggerForm( props:IGetTriggerForm ) {
           description1={''} 
           varType='button' callBack={GetTriggers} loadingButton={true} loading={state.loading}
         />
+
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+          <code>{"const result = await mentaportSDK.getTriggers(triggerType, contractId, ruleId);"}</code>
+        </Box>
+
         <Results result={infoResult} />
         
       </Paper>

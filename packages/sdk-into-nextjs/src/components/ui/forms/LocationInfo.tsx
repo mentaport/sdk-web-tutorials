@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -60,6 +61,11 @@ export default function StartGeoForm() {
           description1={getStatusDesc1} 
           description2={getStatusDesc2} 
           caption={getStatusCaption} varType='button' callBack={GetStatus}/>
+
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+          <code>{"const result = mentaportSDK.GetStatus();"}</code>
+        </Box>
+        
         <Results result={statusGeo} />
       </Paper>
       <Divider />
@@ -68,6 +74,10 @@ export default function StartGeoForm() {
         <FunctionCodeForm title={getLocationTitle} 
           description1={getLocationDesc1} 
           varType='button' callBack={GetLocationInfo} loadingButton={true} loading={loading}/>
+         <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+          <code>{"const result = await mentaportSDK.getLocationInfo();"}</code>
+        </Box>
+
         <Results result={locationInfo} />
         
       </Paper>

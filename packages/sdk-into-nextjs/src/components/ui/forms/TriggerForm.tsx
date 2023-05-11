@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -96,6 +97,25 @@ export default function TriggerForm( props:ITriggerForm ) {
     setState({ ...state, "loading": false });
   }
 
+  function CodeSnippet () {
+    let code = ''
+    if(props.title === "Mint") {
+      if(state.check) {
+        code = 'const result = await mentaportSDK.checkMintStatus(contractId, ruleId);'
+      } else {
+        code = 'const result = await mentaportSDK.triggerMint(userInfo, contractId, ruleId);'
+      }
+    } else if(props.title === "Mint List") {
+      if(state.check) {
+        code = 'const result = await mentaportSDK.checkMintlistStatus(contractId, ruleId);'
+      } else {
+        code = 'const result = await mentaportSDK.triggerMintlist(userInfo, contractId, ruleId);'
+      }
+    }
+    return (
+      <code>{code}</code>
+    );
+  }
   return (
  
     <Paper elevation={2} sx={{ p:0,mt:1, display: 'flex', flexDirection: 'column' }}>
@@ -136,6 +156,10 @@ export default function TriggerForm( props:ITriggerForm ) {
         <FunctionCodeForm title={''} 
           description1={''} 
           varType='button' callBack={TriggerSDK} loadingButton={true} loading={state.loading}/>
+
+        <Box sx={{ bgcolor:'#eeeeee', margin:'auto', paddingX:5, marginBottom:5}}>
+         <CodeSnippet />
+        </Box>
         <Results result={infoResult} />
         
       </Paper>
