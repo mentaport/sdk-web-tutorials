@@ -1,17 +1,18 @@
 import pkg from '@mentaport/supplement';
-const { MentaportSupplementSDK, MentaportUtils } = pkg;
 
+const  {MentaportSupplementSDK, MentaportUtils} = pkg;
 import {
-  ContractType, 
-  ContractStatus,
+  ContractEnvironment, 
   BlockchainTypes,
+} from "@mentaport/types-supplement";
+import {
+  Environment,
   RuleSchemas,
   RuleTypes,
   AccessTypes,
   TimeTypes,
   LocationTypes,
-  Environment
-} from "@mentaport/types-supplement";
+} from "@mentaport/types-common";
 
 import * as dotenv from 'dotenv'
 dotenv.config()
@@ -25,12 +26,14 @@ dotenv.config()
  */
 
 const supClient = new MentaportSupplementSDK(process.env.MENTAPORT_API_KEY);
-supClient.SetClientSide(Environment.STABLE);
+supClient.setClientEnv(Environment.STAGING);
 
 /**
- * --------------------------------------------------------------
- * Functions to create and manage contracts
+ * Function to create and manage contract
  * 
+ *  @param  {string} name of contract
+ *  @param  {ContractType} contract type (Blockchain, Mintlist)
+ *  @param  {BlockchainTypes} blockchain (Ethereum, Polygon, Sui)
  */
 async function createNewContract(name, type, chain) {
   const newContract = await supClient.contractSDK.createNewContract(name, type, chain);
@@ -43,6 +46,11 @@ async function getMyContracts() {
   console.log(myContracts);
 }
 
+/**
+ * Activating a contract deployed by Mentaport. 
+ *
+ * @param  {string} contract id
+ */
 async function activate(contractId) {
   const result = await supClient.contractSDK.activateContract(contractId);
   console.log(result)
@@ -105,16 +113,20 @@ async function getRules(contractId) {
 async function TutorialInit() {
   try {
     // 1. CREATE A CONTRACT
-    const newcontract = await createNewContract("My first contract", ContractType.Mintlist, BlockchainTypes.Polygon );
+    const name = "My first Mezzanine Contract";
+    const environment = ContractEnvironment.Mezzanine;
+    const chain = BlockchainTypes.None;
+    const newcontract = await createNewContract(name, environment, chain );
     const contractId = newcontract.data.contractId;
 
+    console.log(contractId)
     // 2. SET RULES FOR CONTRACT
-    await setRules(contractId);
+   // await setRules(contractId);
     // 2.1 Get rules
     //await getRules(contractId)
 
     // 3. ACTIVATE CONTRACT
-    await activate(contractId)
+    //await activate(contractId)
   } catch(error) {
     console.log(error)
   }
@@ -138,12 +150,13 @@ async function TutorialUpdate(contractId) {
   }
 }
 
-async function TutorialGetMintlist(contractId){
-  const list = await supClient.contractSDK.getMintlistById(contractId);
+async function TutorialGetMezzanine(contractId){
+  const list = await supClient.contractSDK.getMezzanineById(contractId);
   console.log(list)
 }
 
-//TutorialInit()
+//getMyContracts()
+TutorialInit()
 
 //TutorialUpdate('contract-id')
 
