@@ -1,8 +1,7 @@
 # SDK Web Tutorials
-A public repo for Mentaports SDK Tutorials
+A public repo for Mentaports SDK Tutorials, where you can get started in creating location-aware projects.
 
 The project is a mono repo, with all the tutorials inside the package folder.
-This code is here to help you get started in creating location-aware projects.
 
 
 ## Tutorials:
@@ -17,6 +16,8 @@ Inside the package folder you will find all the tutorials.
 
 ## API Key
 Send us an email to developer@mentaport.com to get your FREE API key to run the tutorial and the SDK Package.
+
+Each tutorial has an empty *.env* file for you to add your API key and other variables.
 
 ## Asks:
 - ask as many questions as you might have
