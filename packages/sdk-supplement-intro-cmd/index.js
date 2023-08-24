@@ -2,17 +2,15 @@ import pkg from '@mentaport/supplement';
 
 const  {MentaportSupplementSDK, MentaportUtils} = pkg;
 import {
-  ContractEnvironment, 
-  BlockchainTypes,
-} from "@mentaport/types-supplement";
-import {
   Environment,
   RuleSchemas,
   RuleTypes,
   AccessTypes,
   TimeTypes,
   LocationTypes,
-} from "@mentaport/types-common";
+  ContractEnvironment, 
+  BlockchainTypes,
+} from "@mentaport/types-supplement";
 
 import * as dotenv from 'dotenv'
 dotenv.config()
@@ -32,11 +30,14 @@ supClient.setClientEnv(Environment.STAGING);
  * Function to create and manage contract
  * 
  *  @param  {string} name of contract
- *  @param  {ContractType} contract type (Blockchain, Mintlist)
+ *  @param  {ContractEnvironment} Contract env (Testnet, Mainnet, Mezzanine)
  *  @param  {BlockchainTypes} blockchain (Ethereum, Polygon, Sui)
  */
-async function createNewContract(name, type, chain) {
-  const newContract = await supClient.contractSDK.createNewContract(name, type, chain);
+async function createNewContract() {
+  const name = "My first Mezzanine Contract";
+  const environment = ContractEnvironment.Mezzanine;
+  const chain = BlockchainTypes.None;
+  const newContract = await supClient.contractSDK.createNewContract(name, environment, chain);
   console.log(newContract);
   return newContract;
 }
@@ -66,7 +67,9 @@ function createRules(contractId, name, description, latitude, longitude, radius,
   const rule = {
     schema:RuleSchemas.Contract,
     id:contractId,
-    type:RuleTypes.Mintlist,
+    name,
+    description,
+    type:RuleTypes.Mezzanine,
     access:{
       type:AccessTypes.Public
     },
@@ -75,14 +78,12 @@ function createRules(contractId, name, description, latitude, longitude, radius,
     },
     location:{
       type: LocationTypes.Radius,
-      name,
-      description,
       mainCoordinate:{
         latitude,
         longitude,
         radius
       },
-      polygonList:[]
+     
     },
     amount
   }
@@ -90,15 +91,19 @@ function createRules(contractId, name, description, latitude, longitude, radius,
 }
 
 async function setRules(contractId) {
-  // name, description, latitude, longitude, radius (m), amount
-  const miles = MentaportUtils.convertMilesToMeters(7);
-  const rule1 = createRules(contractId,"Rule San Francisco","My rule in all San Francisco, CA", 37.7749, -122.4194 , miles, 100);
-  const rule2 = createRules(contractId,"Rule Venice","My rule in Venice beach CA", 33.9850, -118.4695, 80, 100);
- // const rule3 = createRules(contractId,"Rule Santa Monica","My rule in Santa Monica CA",34.0195, -118.4912, miles, 100);
+  try {
+    // name, description, latitude, longitude, radius (m), amount
+    const miles = MentaportUtils.convertMilesToMeters(7);
+    const rule1 = createRules(contractId,"Rule San Francisco","My rule in all San Francisco, CA", 37.7749, -122.4194 , miles, 100);
+    const rule2 = createRules(contractId,"Rule Venice","My rule in Venice beach CA", 33.9850, -118.4695, 80, 100);
+  // const rule3 = createRules(contractId,"Rule Santa Monica","My rule in Santa Monica CA",34.0195, -118.4912, miles, 100);
 
-  const result = await supClient.rulesSDK.createNewRules([rule1, rule2])
-  // const result = await supClient.rulesSDK.createNewRules([rule3])
-  console.log(result)
+    const result = await supClient.rulesSDK.createNewRules([rule1, rule2])
+    // const result = await supClient.rulesSDK.createNewRules([rule3])
+    console.log(result)
+  } catch(error){
+    console.log(error)
+  }
 }
 
 async function getRules(contractId) {
@@ -113,20 +118,20 @@ async function getRules(contractId) {
 async function TutorialInit() {
   try {
     // 1. CREATE A CONTRACT
-    const name = "My first Mezzanine Contract";
-    const environment = ContractEnvironment.Mezzanine;
-    const chain = BlockchainTypes.None;
-    const newcontract = await createNewContract(name, environment, chain );
-    const contractId = newcontract.data.contractId;
+   
+    const newcontract = await createNewContract();
+    if(newcontract.status) {
+      const contractId = newcontract.data.contractId;
+      // await supClient.contractSDK.activateContract(contractId,'0x9941eD017d6F5c3f443E0C7DdB311516ecD1E73A');
+      console.log(contractId)
+      // 2. SET RULES FOR CONTRACT
+      await setRules(contractId);
+      // 2.1 Get rules
+      //await getRules(contractId)
 
-    console.log(contractId)
-    // 2. SET RULES FOR CONTRACT
-   // await setRules(contractId);
-    // 2.1 Get rules
-    //await getRules(contractId)
-
-    // 3. ACTIVATE CONTRACT
-    //await activate(contractId)
+      // 3. ACTIVATE CONTRACT
+      //await activate(contractId)
+    }
   } catch(error) {
     console.log(error)
   }
@@ -155,8 +160,9 @@ async function TutorialGetMezzanine(contractId){
   console.log(list)
 }
 
-//getMyContracts()
-TutorialInit()
+
+
+//TutorialInit()
 
 //TutorialUpdate('contract-id')
 

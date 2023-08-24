@@ -4,6 +4,8 @@ node_modules/
 
 .npmrc
 **/.npmrc
-.env1
 # local env files
 **/.env*.local
+.env
+
+**/**/.env

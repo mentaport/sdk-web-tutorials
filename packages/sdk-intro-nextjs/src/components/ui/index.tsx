@@ -10,6 +10,7 @@ import StartGeoForm from '@components/forms/location/StartGeoForm';
 import DistanceForm from '@components/forms/helpers/GetDistanceForm';
 import MezzanineTriggerForm from '@components/forms/triggers/MezzanineTriggerForm';
 import MintTriggerForm from '@components/forms/triggers/MintTriggerForm';
+import MintPreDeployedForm from '@components/forms/triggers/MintPreDeployedForm';
 import GetTriggerForm from '@components/forms/helpers/GetTriggerForm';
 import GetClosestTriggerForm from '@components/forms/helpers/GetClosestTriggerForm';
 
@@ -90,6 +91,7 @@ export default function Main() {
 
         {/* TRIGGER FUNCTIONS TAB PANEL */}
         <TabPanel value={value} index={1}>
+          {/* <MintPreDeployedForm /> */}
           <MintTriggerForm />
           <MezzanineTriggerForm />
           
