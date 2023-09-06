@@ -34,7 +34,7 @@ export interface IMintProps {
 export interface IMintParams {
   tokenURI: string;
   ruleId: string
-  timestamp: string;
+  timestamp: number;
   signature: string;
   city: string;
   country: string;
@@ -111,7 +111,7 @@ const PolygonMint = (props:IMintProps) => {
         }
         console.log("mintRequest", MentaportMint.abi)
         console.log(publicClient)
-        const contractAddress =res.data?.contractAddress as `0x${string}`;
+        const contractAddress = res.data?.contractAddress as `0x${string}`;
 
         // @ts-ignore
         const { request } = await publicClient.simulateContract({

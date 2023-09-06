@@ -9,18 +9,7 @@ export async function MentaportServerSDK(reqUrl:string, method:string, body:stri
 
   if(mentaportClient == null) {
     mentaportClient = new MentaportCoreSDK(process.env.MENTAPORT_API_KEY!, Boolean(process.env.NEXT_PUBLIC_SERVER_APP!));
-    
-    let env = Environment.PRODUCTION;
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "DEVELOPMENT") {
-      env = Environment.DEVELOPMENT;
-    }
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "STAGING") {
-      env = Environment.STAGING;
-    }
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "STABLE") {
-      env = Environment.STABLE;
-    }
-    mentaportClient.setServerEnv(env)
+    mentaportClient.setServer()
   } else {
     console.log("Already InitMentaportSDKSever")
   }

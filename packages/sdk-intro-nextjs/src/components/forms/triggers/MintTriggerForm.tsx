@@ -141,15 +141,12 @@ export default function MintTriggerForm() {
          <Divider />
           {state.mint ?
             <>
-            
               <FunctionCodeForm title={getNameTitle} 
                 description1={"User name info"} caption={getOptionalCaption}
                 varType='string' callBack={handleChange} value={state.name}/>
               <FunctionCodeForm title={getEmailTitle} 
                 description1={"User email info"} caption={getOptionalCaption}
                 varType='email' callBack={handleChange} value={state.email}/>
-
-          
             </>
           :
             <FunctionCodeForm title={''} 

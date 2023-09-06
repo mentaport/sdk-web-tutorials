@@ -2,8 +2,7 @@
 import React, {useEffect, useState, useContext} from "react";
 
 import { createContext } from 'react';
-import {MentaportCoreSDK}  from '@mentaport/core'
-import { Environment } from '@mentaport/types-core';
+import { MentaportCoreSDK }  from '@mentaport/core'
 
 interface IMentaportContext {
   mentaportSDK: MentaportCoreSDK;
@@ -21,18 +20,7 @@ const MentaportProvider:React.FC<Props> = ({children}) =>{
   const [mentaportSDK, setMentaportSDK] = useState(defaultState.mentaportSDK);
   
   useEffect(() => {
-    let env = Environment.PRODUCTION;
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "DEVELOPMENT") {
-      env = Environment.DEVELOPMENT;
-    }
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "STAGING") {
-      env = Environment.STAGING;
-    }
-    if(process.env.NEXT_PUBLIC_ENVIRONMENT === "STABLE") {
-      env = Environment.STABLE;
-    }
-    
-    mentaportSDK.setClientEnv(env, process.env.NEXT_PUBLIC_API_URL);
+    mentaportSDK.setClient(process.env.NEXT_PUBLIC_API_URL);
     //mentaportSDK.setNoLocationRequired();
   }, [])
   return (

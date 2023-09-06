@@ -1,6 +1,6 @@
 import pkg from '@mentaport/supplement';
 
-const  {MentaportSupplementSDK, MentaportUtils} = pkg;
+const {MentaportSupplementSDK, MentaportUtils} = pkg;
 import {
   Environment,
   RuleSchemas,
@@ -24,14 +24,14 @@ dotenv.config()
  */
 
 const supClient = new MentaportSupplementSDK(process.env.MENTAPORT_API_KEY);
-supClient.setClientEnv(Environment.STAGING);
+supClient.setClient(Environment.STAGING);
 
 /**
  * Function to create and manage contract
  * 
- *  @param  {string} name of contract
- *  @param  {ContractEnvironment} Contract env (Testnet, Mainnet, Mezzanine)
- *  @param  {BlockchainTypes} blockchain (Ethereum, Polygon, Sui)
+ *  @param {string} name of contract
+ *  @param {ContractEnvironment} Contract env (Testnet, Mainnet, Mezzanine)
+ *  @param {BlockchainTypes} blockchain (Ethereum, Polygon, Sui)
  */
 async function createNewContract() {
   const name = "My first Mezzanine Contract";
@@ -50,7 +50,7 @@ async function getMyContracts() {
 /**
  * Activating a contract deployed by Mentaport. 
  *
- * @param  {string} contract id
+ * @param {string} contract id
  */
 async function activate(contractId) {
   const result = await supClient.contractSDK.activateContract(contractId);

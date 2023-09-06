@@ -12,7 +12,7 @@
   "author": "Mentaport",
   "license": "Mentaport",
   "dependencies": {
-    "@mentaport/supplement": "1.1.1",
+    "@mentaport/supplement": "1.1.2",
     "dotenv": "^16.0.3"
   }
 }

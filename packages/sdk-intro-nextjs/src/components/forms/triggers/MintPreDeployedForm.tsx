@@ -132,7 +132,8 @@ export default function MintPreDeployedForm() {
             {(state.blockchain == 'Polygon')?
               <PolygonMint 
                contractId={state.contractId}
-               email={state.email} name={state.name} />
+               email={state.email} 
+               name={state.name} />
             : (<SuiMint email={state.email} name={state.name}/>)
             }
           </>
