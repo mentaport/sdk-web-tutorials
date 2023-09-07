@@ -13,8 +13,8 @@ import Stack from '@mui/material/Stack';
 import FunctionCodeForm from '@components/forms/common/FunctionCodeForm';
 import Results from '@components/forms/common/Results';
 
-import { useMentaportSDK } from '@lib/mentaport/provider';
-import {TriggerTypes,IRule} from '@mentaport/types-core';
+import { useMentaportSDK } from '@mentaport/sdk-nextjs';
+import { TriggerTypes, IRule } from '@mentaport/types-core';
 
 import { 
   getContractIdTitle,

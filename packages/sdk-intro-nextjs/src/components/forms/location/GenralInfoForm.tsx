@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import FunctionCodeForm from '@components/forms/common/FunctionCodeForm';
 import Results from '@components/forms/common/Results';
 
-import { useMentaportSDK } from '@lib/mentaport/provider';
+import { useMentaportSDK } from '@mentaport/sdk-nextjs';
 
 import { 
   getLocationDesc1,

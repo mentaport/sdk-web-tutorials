@@ -16,7 +16,7 @@ import {
 } from '@suiet/wallet-kit';
 import {TransactionBlock} from "@mysten/sui.js";
 
-import { useMentaportSDK } from '@lib/mentaport/provider';
+import { useMentaportSDK } from '@mentaport/sdk-nextjs';
 import { IUserInfo } from '@mentaport/types-core';
 import { resetWarningCache } from 'prop-types';
 

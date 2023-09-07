@@ -12,7 +12,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import FunctionCodeForm from '@components/forms/common/FunctionCodeForm';
 import Results from '@components/forms/common/Results';
-import { useMentaportSDK } from '@lib/mentaport/provider';
+import { useMentaportSDK } from '@mentaport/sdk-nextjs';
 import {TriggerTypes, DistanceUnits} from '@mentaport/types-core';
 
 import { 

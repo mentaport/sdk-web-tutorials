@@ -21,9 +21,10 @@ import { numberToHex,
 
 import { goerli, localhost} from 'viem/chains'
 
-import MentaportMint  from "../../../json/MentaportMint.json";
-import { useMentaportSDK } from '@lib/mentaport/provider';
+import { useMentaportSDK } from '@mentaport/sdk-nextjs';
 import { IUserInfo } from '@mentaport/types-core';
+
+import MentaportMint  from "../../../json/MentaportMint.json";
 
 export interface IMintProps {
   name:string,

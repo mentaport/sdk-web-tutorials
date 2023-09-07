@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mentaport/sdk-nextjs": "0.0.1",
     "@mentaport/core": "^1.1.2",
     "@emotion/cache": "^11.10.7",
     "@emotion/react": "^11.10.6",

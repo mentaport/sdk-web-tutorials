@@ -9,7 +9,7 @@ import theme from '@styles/theme/simpleTheme';
 
 import {createEmotionCache} from '@lib/emotion/createEmotionCache';
 
-import MentaportProvider from '@lib/mentaport/provider';
+import { MentaportProvider } from '@mentaport/sdk-nextjs'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
