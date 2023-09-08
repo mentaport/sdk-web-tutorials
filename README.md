@@ -3,7 +3,12 @@ A public repo for Mentaports SDK Tutorials, where you can get started in creatin
 
 The project is a mono repo, with all the tutorials inside the package folder.
 
+## Web Module Packages:
+Checkout our packages to integrate Next.js and React:
+https://github.com/mentaport/sdk-web-modules
 
+### Next.js:
+     npm install @mentaport/sdk-nextjs
 ## Tutorials:
 Inside the package folder you will find all the tutorials.
 - Core SDK Quick Intro: *[sdk-into-nextjs]*
