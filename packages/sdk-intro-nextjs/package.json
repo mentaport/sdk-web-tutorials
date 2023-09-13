@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3005",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@mentaport/sdk-nextjs": "0.0.1",
-    "@mentaport/core": "^1.1.2",
+    "@mentaport/sdk-nextjs": "1.0.1",
+    "@mentaport/core": "1.1.5",
     "@emotion/cache": "^11.10.7",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",

@@ -10,6 +10,7 @@ import {
   LocationTypes,
   ContractEnvironment, 
   BlockchainTypes,
+
 } from "@mentaport/types-supplement";
 
 import * as dotenv from 'dotenv'
@@ -28,20 +29,36 @@ supClient.setClient(Environment.STAGING);
 
 /**
  * Function to create and manage contract
- * 
- *  @param {string} name of contract
- *  @param {ContractEnvironment} Contract env (Testnet, Mainnet, Mezzanine)
- *  @param {BlockchainTypes} blockchain (Ethereum, Polygon, Sui)
  */
-async function createNewContract() {
-  const name = "My first Mezzanine Contract";
-  const environment = ContractEnvironment.Mezzanine;
-  const chain = BlockchainTypes.None;
-  const newContract = await supClient.contractSDK.createNewContract(name, environment, chain);
-  console.log(newContract);
-  return newContract;
-}
+async function createNewBlockchainContract() {
 
+  const my_address = "" // the wallet address of the owner of the project/contract
+  const newContract = {
+    name: "My first Polygon Contract",
+    environment:ContractEnvironment.Testnet,
+    blockchain: BlockchainTypes.Polygon,
+    owner:my_address,
+    cost:0,
+    maxMintAmount:10,
+    projectBaseURI:"www.my_project.com"
+  }
+  const resContract = await supplementClient.contractSDK.createNewContract(newContract);
+  console.log(resContract);
+  return resContract;
+}
+async function createNewMezzanineContract() {
+  const newContract = {
+    name: "My first Mezzanine Contract",
+    owner:'',
+    environment:ContractEnvironment.Mezzanine,
+    blockchain: BlockchainTypes.None,
+    projectBaseURI:"www.my_project.com",
+   
+  }
+  const resContract = await supplementClient.contractSDK.createNewContract(newContract);
+  console.log(resContract);
+  return resContract;
+}
 async function getMyContracts() {
   const myContracts = await supClient.contractSDK.getContracts();
   console.log(myContracts);
@@ -118,8 +135,7 @@ async function getRules(contractId) {
 async function TutorialInit() {
   try {
     // 1. CREATE A CONTRACT
-   
-    const newcontract = await createNewContract();
+    const newcontract = await createNewMezzanineContract();
     if(newcontract.status) {
       const contractId = newcontract.data.contractId;
       // await supClient.contractSDK.activateContract(contractId,'0x9941eD017d6F5c3f443E0C7DdB311516ecD1E73A');
